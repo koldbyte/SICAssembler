@@ -1,5 +1,6 @@
 #ifndef INSTRUCTION_H
 #define INSTRUCTION_H
+#include "QString"
 
 class Instruction
 {
@@ -23,6 +24,18 @@ public:
     QString getOperand();
     int getBase_status();
     int getFormat();
+
+    setLine(unsigned int line);
+    setloc(unsigned int loc);
+    setObjectCode(unsigned long objc);
+    setLabel(QString label);
+    setOperator(QString oper);
+    setOperand(QString operand);
+    setBase_status(int bs);
+    setFormat(int format);
+
+    bool hasOperatorSet();
+
 };
 
 #endif // INSTRUCTION_H

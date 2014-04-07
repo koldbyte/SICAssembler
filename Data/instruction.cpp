@@ -49,3 +49,42 @@ int Instruction::getBase_status(){
 int Instruction::getFormat(){
     return this->format;
 }
+
+Instruction::setLine(unsigned int line){
+    this->line = line;
+}
+
+Instruction::setloc(unsigned int loc){
+    this->loc = loc;
+}
+
+Instruction::setObjectCode(unsigned long objc){
+    this->ObjectCode = objc;
+}
+
+Instruction::setLabel(QString label){
+    this->label = label;
+}
+
+Instruction::setOperator(QString oper){
+    if(oper.startsWith("+")){
+        oper.remove(0,1);
+    }
+    this->Operator = oper;
+}
+
+Instruction::setOperand(QString operand){
+    this->Operand = operand;
+}
+
+Instruction::setBase_status(int bs){
+    this->base_status = bs;
+}
+
+Instruction::setFormat(int format){
+    this->format = format;
+}
+
+bool Instruction::hasOperatorSet(){
+    return !(Operator.isEmpty() || Operator.isNull());
+}

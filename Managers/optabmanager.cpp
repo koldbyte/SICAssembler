@@ -1,6 +1,5 @@
 #include "optabmanager.h"
-#include "Data/opcode.h"
-#include "QVector"
+
 OptabManager::OptabManager(){
 
 }
@@ -20,12 +19,23 @@ Opcode OptabManager::getOpcode(QString mnmemonic){
             return getOpcode(i);
         }
     }
+    return null;
 }
 
 Opcode OptabManager::getOpcode(int i){
     if(i>=0 && i< m_optab.count()){
         return m_optab[i];
     }
+    return null;
 }
+
+bool OptabManager::isOpcode(QString op){
+    if(op !=null && op.startsWith("+")){
+        op = op.remove(0,1);
+    }
+    return this->getOpcode(op) != null;
+}
+
+
 
 

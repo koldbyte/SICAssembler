@@ -1,6 +1,8 @@
 #ifndef OPTABMANAGER_H
 #define OPTABMANAGER_H
 #include "Data/opcode.h"
+#include "QVector"
+#include "QString"
 
 class OptabManager
 {
@@ -15,6 +17,7 @@ public:
     Opcode getOpcode(QString mnmemonic);
     Opcode getOpcode(int i);
 
+    bool isOpcode(QString op);
 };
 
 #endif // OPTABMANAGER_H
