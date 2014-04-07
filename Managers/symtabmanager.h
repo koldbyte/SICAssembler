@@ -12,10 +12,9 @@ public:
     SymtabManager();
 
     Symbol search(QString s);
-    Symbol search(QString s,int l,int h);
 
-    insertSymbol(Symbol sym);
-    insertSymbol(QString lbl,int addr);
+    void insertSymbol(Symbol sym);
+    void insertSymbol(QString lbl,int addr);
 
 };
 

@@ -6,28 +6,26 @@ SymtabManager::SymtabManager(){
     RegisterManager regM = RegisterManager();
     int rcount = regM.getRegisterCount();
     for(int i=0;i<rcount;i++){
-        Symbol sym = Symbol(regM.getRegister(i),regM.getAddress(i));
+        Symbol sym = Symbol(regM.getRegister(i,0),regM.getAddress(i));
         insertSymbol(sym);
     }
 }
 
 Symbol SymtabManager::search(QString s){
-    return this->search(s,0,m_symbols.size());
-}
 
-Symbol SymtabManager::search(QString s, int l, int h){
     foreach (Symbol sym, m_symbols) {
         if(sym.getLabel()==s){
             return sym;
         }
     }
+    return Symbol();
 }
 
-SymtabManager::insertSymbol(Symbol sym){
+void SymtabManager::insertSymbol(Symbol sym){
     m_symbols.push_back(sym);
 }
 
-SymtabManager::insertSymbol(QString lbl,int addr){
+void SymtabManager::insertSymbol(QString lbl,int addr){
     Symbol sym = Symbol(lbl,addr);
     insertSymbol(sym);
 }

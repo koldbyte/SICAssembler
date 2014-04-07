@@ -50,38 +50,38 @@ int Instruction::getFormat(){
     return this->format;
 }
 
-Instruction::setLine(unsigned int line){
+void Instruction::setLine(unsigned int line){
     this->line = line;
 }
 
-Instruction::setloc(unsigned int loc){
+void Instruction::setloc(unsigned int loc){
     this->loc = loc;
 }
 
-Instruction::setObjectCode(unsigned long objc){
+void Instruction::setObjectCode(unsigned long objc){
     this->ObjectCode = objc;
 }
 
-Instruction::setLabel(QString label){
+void Instruction::setLabel(QString label){
     this->label = label;
 }
 
-Instruction::setOperator(QString oper){
+void Instruction::setOperator(QString oper){
     if(oper.startsWith("+")){
         oper.remove(0,1);
     }
     this->Operator = oper;
 }
 
-Instruction::setOperand(QString operand){
+void Instruction::setOperand(QString operand){
     this->Operand = operand;
 }
 
-Instruction::setBase_status(int bs){
+void Instruction::setBase_status(int bs){
     this->base_status = bs;
 }
 
-Instruction::setFormat(int format){
+void Instruction::setFormat(int format){
     this->format = format;
 }
 

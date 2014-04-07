@@ -11,10 +11,10 @@ bool Parser::checkquotes(QString s){
 
 Instruction Parser::parseLine(QString line){
     //no need to process empty lines
-    if(line.isEmpty()) return null;
+    if(line.isEmpty()) return Instruction();
     //check if the line is a comment line
     if(line.contains('.') && line.length()==1 || line.startsWith('.')){
-        return null;
+        return Instruction();
     }
     //A line may have a comment in it..remove that comment
     int commentStartIndex = line.indexOf('.');
@@ -27,7 +27,7 @@ Instruction Parser::parseLine(QString line){
     //Continue processing if there is a Operation specified
     if(tokens.length() > 1 || tokens[0].length()> 0){
         int counter = 0;
-
+        OptabManager opm;
         foreach(QString token,tokens){
             if(token.length()==0)
                 continue;
@@ -39,7 +39,7 @@ Instruction Parser::parseLine(QString line){
             }
 
             switch(counter){
-                case 0 : if(OptabManager::isOpcode(token)){
+                case 0 : if(opm.isOpcode(token)){
                     ins.setOperator(token);
                 }else ins.setLabel(token);
                 break;
@@ -50,7 +50,10 @@ Instruction Parser::parseLine(QString line){
                 case 2 : ins.setOperand(token);break;
                 default :
                     //error TODO
+                break;
             }
+            counter++;
         }
     }
+    return ins;
 }

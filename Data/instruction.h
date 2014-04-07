@@ -25,14 +25,14 @@ public:
     int getBase_status();
     int getFormat();
 
-    setLine(unsigned int line);
-    setloc(unsigned int loc);
-    setObjectCode(unsigned long objc);
-    setLabel(QString label);
-    setOperator(QString oper);
-    setOperand(QString operand);
-    setBase_status(int bs);
-    setFormat(int format);
+    void setLine(unsigned int line);
+    void setloc(unsigned int loc);
+    void setObjectCode(unsigned long objc);
+    void setLabel(QString label);
+    void setOperator(QString oper);
+    void setOperand(QString operand);
+    void setBase_status(int bs);
+    void setFormat(int format);
 
     bool hasOperatorSet();
 

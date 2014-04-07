@@ -1,5 +1,6 @@
 #ifndef OPCODE_H
 #define OPCODE_H
+#include "QString"
 
 class Opcode
 {
@@ -7,7 +8,7 @@ class Opcode
     int format;
     int machinecode;
 public:
-
+    Opcode();
     Opcode(QString,int,int);
 
     QString getMnemonic();

@@ -11,8 +11,8 @@ class OptabManager
 public:
     OptabManager();
 
-    insertOpcode(Opcode op);
-    insertOpcode(QString Mnemonic,int format,int machinecode);
+    void insertOpcode(Opcode op);
+    void insertOpcode(QString Mnemonic,int format,int machinecode);
 
     Opcode getOpcode(QString mnmemonic);
     Opcode getOpcode(int i);

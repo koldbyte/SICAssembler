@@ -13,7 +13,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        Managers/mainwindow.cpp \
+        mainwindow.cpp \
     Managers/symtabmanager.cpp \
     Managers/optabmanager.cpp \
     Managers/registermanager.cpp \

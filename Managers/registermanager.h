@@ -5,6 +5,7 @@
 class RegisterManager
 {
     QMap<QString,int> m_registers;
+    QMap<QString,int> ::iterator m_it;
 public:
     RegisterManager();
 
@@ -12,10 +13,10 @@ public:
     int getAddress(QString label);
     int getAddress(int i);
 
-    QString getLabel(int address);
-    QString getRegister(int i);
+    QString getRegister(int address);
+    QString getRegister(int i,int c);
 
-    insertRegister(QString,int);
+    void insertRegister(QString,int);
 };
 
 #endif // REGISTERMANAGER_H

@@ -4,7 +4,7 @@
 RegisterManager::RegisterManager(){
     QString regs[] =  {"A","X","L","B","S","T","F"};
     int regcode[] = {0,1,2,3,4,5,6};
-    int cnt_registers = sizeof(registers)/ sizeof(registers[0]);
+    int cnt_registers = sizeof(regs)/ sizeof(regs[0]);
     for(int i=0;i<cnt_registers;i++){
          insertRegister(regs[i],regcode[i]);
     }
@@ -18,28 +18,34 @@ int RegisterManager::getAddress(QString label){
     return m_registers[label];
 }
 
+
 int RegisterManager::getAddress(int i){
     if(i>=0 && i<=m_registers.size()){
-        return m_registers.value(i);
+        return (m_registers.begin()+i).value();
+        //return m_registers.value(i);
     }else return -1;
 }
 
 
-QString RegisterManager::getLabel(int address){
-    for(int i=0;i<m_registers.size();i++){
-        if(m_registers.value(i)==address){
-            return this->getRegister(i);
+QString RegisterManager::getRegister(int address){
+    for(m_it=m_registers.begin();m_it!=m_registers.end();m_it++){
+        if(m_it.value()==address){
+            return m_it.key();
         }
     }
+    return QString::null;
 }
 
-QString RegisterManager::getRegister(int i){
+QString RegisterManager::getRegister(int i,int c){
+    c++;
     if(i>=0 && i<=m_registers.size()){
-        this->m_registers.key(i);
-    }else return "";
+        return (this->m_registers.begin()+i).key();
+    }
+    return "";
 }
 
-RegisterManager::insertRegister(QString r,int a){
+
+void RegisterManager::insertRegister(QString r,int a){
     if(r!="")
         m_registers.insert(r,a);
 }

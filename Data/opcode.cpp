@@ -1,5 +1,12 @@
 #include "opcode.h"
 
+
+Opcode::Opcode(){
+    this->mnemonic  = "";
+    this->format = -1;
+    this->machinecode = -1;
+}
+
 Opcode::Opcode(QString m, int f, int mc)
 {
     this->mnemonic  = m;
@@ -16,5 +23,5 @@ int Opcode::getFormat(){
 }
 
 int Opcode::getMachinecode(){
-    return this->getMachinecode()
+    return this->getMachinecode();
 }

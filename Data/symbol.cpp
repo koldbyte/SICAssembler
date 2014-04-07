@@ -16,19 +16,19 @@ Symbol::Symbol(QString lbl , int addr){
     this->setAddress(addr);
 }
 
-Symbol::getAddress(){
+int Symbol::getAddress(){
     return this->address;
 }
 
-Symbol::getLabel(){
+QString Symbol::getLabel(){
     return this->label;
 }
 
-Symbol::setAddress(int addr){
+void Symbol::setAddress(int addr){
     this->address = addr;
 }
 
-Symbol::setLabel(QString lbl){
+void Symbol::setLabel(QString lbl){
     this->label = lbl;
 }
 

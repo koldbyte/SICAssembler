@@ -1,6 +1,6 @@
 #ifndef SYMBOL_H
 #define SYMBOL_H
-
+#include "QString"
 class Symbol
 {
     QString label;
@@ -12,8 +12,8 @@ public:
 
     int getAddress();
     QString getLabel();
-    setAddress(int);
-    setLabel(QString);
+    void setAddress(int addr);
+    void setLabel(QString lbl);
 };
 
 #endif // SYMBOL_H

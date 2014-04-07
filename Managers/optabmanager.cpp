@@ -4,11 +4,11 @@ OptabManager::OptabManager(){
 
 }
 
-OptabManager::insertOpcode(Opcode op){
+void OptabManager::insertOpcode(Opcode op){
     this->m_optab.push_back(op);
 }
 
-OptabManager::insertOpcode(QString Mnemonic,int format,int machinecode){
+void OptabManager::insertOpcode(QString Mnemonic,int format,int machinecode){
     Opcode op = Opcode(Mnemonic,format,machinecode);
     this->m_optab.push_back(op);
 }
@@ -19,21 +19,21 @@ Opcode OptabManager::getOpcode(QString mnmemonic){
             return getOpcode(i);
         }
     }
-    return null;
+    return Opcode();
 }
 
 Opcode OptabManager::getOpcode(int i){
     if(i>=0 && i< m_optab.count()){
         return m_optab[i];
     }
-    return null;
+    return Opcode();
 }
 
 bool OptabManager::isOpcode(QString op){
-    if(op !=null && op.startsWith("+")){
+    if(op != QString::null && op.startsWith("+")){
         op = op.remove(0,1);
     }
-    return this->getOpcode(op) != null;
+    return (this->getOpcode(op).getMnemonic() != QString::null);
 }
 
 
