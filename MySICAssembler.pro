@@ -13,8 +13,26 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        Managers/mainwindow.cpp \
+    Managers/symtabmanager.cpp \
+    Managers/optabmanager.cpp \
+    Managers/registermanager.cpp \
+    Managers/littabmanager.cpp \
+    parser.cpp \
+    Data/symbol.cpp \
+    Data/opcode.cpp \
+    Data/instruction.cpp \
+    Data/literal.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    Managers/symtabmanager.h \
+    Managers/optabmanager.h \
+    Managers/registermanager.h \
+    Managers/littabmanager.h \
+    parser.h \
+    Data/symbol.h \
+    Data/opcode.h \
+    Data/instruction.h \
+    Data/literal.h
 
 FORMS    += mainwindow.ui
