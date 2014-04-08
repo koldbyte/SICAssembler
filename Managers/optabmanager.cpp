@@ -103,11 +103,10 @@ Opcode OptabManager::getOpcode(int i){
 int OptabManager::getShiftedOpcode(QString mnemonic){
     Opcode op = getOpcode(mnemonic);
     int format = op.getFormat();
-    if(format == 1 ) return op.getMachinecode();
-    else if(format == 2 ) return op.getMachinecode() << 8;
-    else if(format == 3 ) return op.getMachinecode() << 16;
-    //TEST TODO
-    else return op.getMachinecode();
+    if(format == 1) return op.getMachinecode();
+    else if(format == 2) return op.getMachinecode() << 8;
+    else return op.getMachinecode() << 16;
+
 }
 
 bool OptabManager::isOpcode(QString op){

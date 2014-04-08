@@ -81,6 +81,7 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionConvert_Now_triggered()
 {
+    ui->ObjectCodeText->clear();
     QList<QString> code;
     Assembler *assembler = &Singleton<Assembler>::Instance();
     assembler->Assemble(ui->SourceCodeTextEdit->toPlainText());
@@ -90,6 +91,7 @@ void MainWindow::on_actionConvert_Now_triggered()
         cc.append(x);
         cc.append("\r\n");
     }
+    ui->ObjectCodeText->clear();
     ui->ObjectCodeText->setPlainText(cc);
 }
 

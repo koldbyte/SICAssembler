@@ -17,6 +17,8 @@ class Assembler
     int startAddress;
     QString ProgramName;
     QList<QString> code;
+    int uintToHexStr(unsigned int num,char* buff);
+
 public:
     Assembler();
     void Assemble(QString in);

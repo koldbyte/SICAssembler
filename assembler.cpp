@@ -34,12 +34,14 @@ void Assembler::Assemble(QString in){
     qDebug() << "Pass1 Completed.. parsed total lines :" << qPrintable (QString::number(lines));
     qDebug() << "OBJ size" << qPrintable(QString::number(obj.size()));
 
-    ins = pass2(ins,startAddress);
+    //ins = pass2(ins,startAddress);
     lines = 0;
     foreach (Instruction i, obj) {
         lines++;
+        qDebug() << "Pass2: Starting on instruction :: OPER" << qPrintable(i.getOperator()) << " ObjectCode" << qPrintable(QString::number(i.getObjectCode()));
         if(!i.Null()){ //is valid
             i = pass2(i,0);
+            qDebug() << "Pass2: Returned instruction :: OPER" << qPrintable(i.getOperator()) << " ObjectCode" << qPrintable(QString::number(i.getObjectCode()));
             //TODO verify this
             if(QString::number(i.getObjectCode()) != QString::null){
                 code.push_back(this->prepareCode(i.getObjectCode(),i.getloc()));
@@ -47,14 +49,46 @@ void Assembler::Assemble(QString in){
                 //TODO Flush
             }
         }
-        qDebug() << "Running pass2 on #" << qPrintable(QString::number(lines)) << "line. OPER: " <<  qPrintable(ins.getOperator());
     }
 }
 
+int Assembler::uintToHexStr(unsigned int num,char* buff){
+    char hex [] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'A', 'B', 'C', 'D', 'E', 'F' };
+    int len=0,k=0;
+    do//for every 4 bits
+    {
+        //get the equivalent hex digit
+        buff[len] = hex[num & 0xF];
+        len++;
+        num>>=4;
+    }while(num!=0);
+    //since we get the digits in the wrong order reverse the digits in the buffer
+    for(;k<len/2;k++)
+    {//xor swapping
+        buff[k]^=buff[len-k-1];
+        buff[len-k-1]^=buff[k];
+        buff[k]^=buff[len-k-1];
+    }
+    //null terminate the buffer and return the length in digits
+    buff[len]='\0';
+    return len;
+}
+
 QString Assembler::prepareCode(unsigned long int oc,int l){
+    char buff[16];
+    int length;
+    length = this->uintToHexStr(oc,buff);
+    std::string a = buff;
+    QString aa = QString::fromStdString(a);
+
+    length = this->uintToHexStr(l,buff);
+    std::string b = buff;
+    QString bb = QString::fromStdString(b);
+
     QString ret = "";
-    ret.append(QString::number(oc));
-    ret.append(QString::number(l));
+    ret.append(aa);
+    ret.append(",");
+    ret.append(bb);
     return ret;
 }
 
