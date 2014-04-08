@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     Data/symbol.cpp \
     Data/opcode.cpp \
     Data/instruction.cpp \
-    Data/literal.cpp
+    Data/literal.cpp \
+    Gui/codeeditor.cpp
 
 HEADERS  += mainwindow.h \
     Managers/symtabmanager.h \
@@ -33,6 +34,8 @@ HEADERS  += mainwindow.h \
     Data/symbol.h \
     Data/opcode.h \
     Data/instruction.h \
-    Data/literal.h
+    Data/literal.h \
+    Singleton.h \
+    Gui/codeeditor.h
 
 FORMS    += mainwindow.ui
