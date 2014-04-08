@@ -3,6 +3,9 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 #include "Singleton.h"
 #include "parser.h"
 #include "QTextStream"
@@ -14,9 +17,10 @@
 class Assembler
 {
     QList<Instruction> obj;
+    QList<QString> code;
     int startAddress;
     QString ProgramName;
-    QList<QString> code;
+    int programLength;
     int uintToHexStr(unsigned int num,char* buff);
 
 public:
@@ -29,7 +33,7 @@ public:
     int readOperand(QString s,int base);
     QString prepareCode(unsigned long int oc,int l);
     QList<QString> getCode();
-
+    QString prepareHeaderCode();
 };
 
 #endif // ASSEMBLER_H

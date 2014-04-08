@@ -84,15 +84,16 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_actionConvert_Now_triggered()
 {
     ui->ObjectCodeText->clear();
-    QList<QString> code;
+    //QList<QString> code;
     Assembler *assembler = &Singleton<Assembler>::Instance();
     assembler->Assemble(ui->SourceCodeTextEdit->toPlainText());
-    code = assembler->getCode();
+    /*code = assembler->getCode();
     QString cc = "";
     foreach(QString x , code){
         cc.append(x);
         cc.append("\r\n");
-    }
+    }*/
+    QString cc = assembler->prepareHeaderCode();
     ui->ObjectCodeText->clear();
     ui->ObjectCodeText->setPlainText(cc);
 }

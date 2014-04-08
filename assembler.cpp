@@ -1,7 +1,8 @@
 #include "assembler.h"
 
 Assembler::Assembler(){
-
+    programLength = 0;
+    ProgramName = "";
 }
 
 void Assembler::Assemble(QString in){
@@ -36,16 +37,18 @@ void Assembler::Assemble(QString in){
 
     //ins = pass2(ins,startAddress);
     lines = 0;
-    foreach (Instruction i, obj) {
+    QList<Instruction> ::iterator it;
+    for(it= obj.begin();it!=obj.end();it++){
+    //foreach (Instruction i, obj) {
         lines++;
-        qDebug() << "Pass2: Starting on instruction :: OPER" << qPrintable(i.getOperator()) << " ObjectCode" << qPrintable(QString::number(i.getObjectCode()));
-        if(!i.Null()){ //is valid
-            i = pass2(i,0);
-            qDebug() << "Pass2: Returned instruction :: OPER" << qPrintable(i.getOperator()) << " ObjectCode" << qPrintable(QString::number(i.getObjectCode()));
+        qDebug() << "Pass2: Starting on instruction :: OPER" << qPrintable((*it).getOperator()) << " ObjectCode" << qPrintable(QString::number((*it).getObjectCode()));
+        if(!(*it).Null()){ //is valid
+            *it = pass2(*it,0);
+            qDebug() << "Pass2: Returned instruction :: OPER" << qPrintable((*it).getOperator()) << " ObjectCode" << qPrintable(QString::number((*it).getObjectCode()));
             //TODO verify this
-            if(QString::number(i.getObjectCode()) != QString::null){
-                code.push_back(this->prepareCode(i.getObjectCode(),i.getloc()));
-            }else if(i.getOperator().compare("RESB")==0 || i.getOperator().compare("RESW")==0){
+            if(QString::number((*it).getObjectCode()) != QString::null){
+                code.push_back(this->prepareCode((*it).getObjectCode(),(*it).getloc()));
+            }else if((*it).getOperator().compare("RESB")==0 || (*it).getOperator().compare("RESW")==0){
                 //TODO Flush
             }
         }
@@ -227,5 +230,79 @@ int Assembler::readOperand(QString s,int base = 10){
 
 QList<QString> Assembler::getCode(){
     return this->code;
+}
+
+QString Assembler::prepareHeaderCode(){
+    OptabManager *opMan = &Singleton<OptabManager>::Instance();
+
+    QString ret = "";
+    int locctr = 0;
+    bool tt = false;
+    QString tblock = "";
+    QString tblock1 = "";
+    int start=0;
+    int finish=0;
+    QList<Instruction> ::iterator it;
+    for(it= obj.begin();it!=obj.end();it++){
+        Instruction i = *it;
+    //foreach(Instruction i, obj){
+        QString oper = i.getOperator();
+        std::stringstream ss;
+        ss.flush();
+        if(oper.compare("START")==0){
+            ss << "H^" <<std::left<<std::setw(6)<<ProgramName.toStdString()<<"^"<<std::right<<std::setw(6)<<std::setfill('0')<<std::hex<<startAddress<<"^"<<std::setw(6)<<std::setfill('0')<<std::hex<<programLength<<std::endl;
+            ret += QString::fromStdString(ss.str());
+            ss.flush();
+        }else{
+            qDebug() << "Instruction Oper" << qPrintable(oper) << "has loc value " << qPrintable(QString::number(i.getloc())) <<" and format " << qPrintable(QString::number(i.getFormat()));
+            if(i.getloc() - start <= 30){
+                if(!tt){
+                    tblock.clear();
+                    ss.flush();
+                    ss <<"T^"<<std::hex<<std::setw(6)<<std::setfill('0')<< start;//a portion is remaining
+                    ret += QString::fromStdString(ss.str());
+                    ss.flush();
+                    tt = true;
+                }else{
+                    ss.flush();
+                    int format = i.getFormat();
+                    if(format==-1) format = opMan->getOpcode(oper).getFormat();
+                    qDebug() << "Correct Format to " << qPrintable(QString::number(format)) << " Obj--> " << qPrintable(QString::number(i.getObjectCode()));
+                    if(format==1)
+                        ss <<"^"<<std::setw(2)<<std::hex<<i.getObjectCode();
+                    else if(format==2)
+                        ss <<"^"<<std::setw(4)<<std::hex<<i.getObjectCode();
+                    else if(format==3)
+                        ss <<"^"<<std::setw(4)<<std::hex<<i.getObjectCode();
+                    else if(format==4)
+                        ss <<"^"<<std::setw(8)<<std::hex<<i.getObjectCode();
+                    tblock1 += QString::fromStdString(ss.str());
+                    ss.flush();
+                }
+                locctr += i.getloc();
+            }else{
+                //single tblock is complete
+                //so append it to header
+                finish = i.getloc();
+                ss.flush();
+                ss <<"^"<<std::setw(2)<<std::hex<<(finish - start);
+                ret += QString::fromStdString(ss.str());
+                ss.flush();
+                ret += tblock1+"\n";
+                //start a new tblock
+                tblock.clear();
+                tblock1.clear();
+                tt = true;
+                locctr = 0;
+                start = i.getloc();
+                ss <<"T^"<<std::hex<<std::setw(6)<<std::setfill('0')<< start;//a portion is remaining
+                ret += QString::fromStdString(ss.str());
+                ss.flush();
+                locctr += i.getloc();
+            }
+        }
+        qDebug() << qPrintable(tblock) << " || " << qPrintable(tblock1);
+    }
+    return ret;
 }
 
