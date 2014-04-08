@@ -9,6 +9,7 @@
 #include "QMessageBox"
 #include "QTextStream"
 #include "assembler.h"
+#include "Gui/loggersingleton.h"
 
 namespace Ui {
 class MainWindow;

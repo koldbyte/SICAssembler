@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    LoggerSingleton *logger=LoggerSingleton::getInstance();
+    logger->setTextEdit(ui->consoleText);
 }
 
 MainWindow::~MainWindow()
