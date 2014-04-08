@@ -23,5 +23,5 @@ int Opcode::getFormat(){
 }
 
 int Opcode::getMachinecode(){
-    return this->getMachinecode();
+    return this->machinecode;
 }

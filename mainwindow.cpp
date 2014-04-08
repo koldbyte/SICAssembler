@@ -72,3 +72,28 @@ void MainWindow::on_actionSave_Output_triggered(){
              stream << ui->ObjectCodeText->toPlainText();
         }
 }
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+    //exit(0);
+}
+
+void MainWindow::on_actionConvert_Now_triggered()
+{
+    QList<QString> code;
+    Assembler *assembler = &Singleton<Assembler>::Instance();
+    assembler->Assemble(ui->SourceCodeTextEdit->toPlainText());
+    code = assembler->getCode();
+    QString cc = "";
+    foreach(QString x , code){
+        cc.append(x);
+        cc.append("\r\n");
+    }
+    ui->ObjectCodeText->setPlainText(cc);
+}
+
+void MainWindow::writeToConsole(QString s){
+    ui->consoleText->append(s);
+    ui->consoleText->append("\n");
+}

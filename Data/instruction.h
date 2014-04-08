@@ -12,6 +12,7 @@ class Instruction
     QString Operand;
     int base_status;
     int format;
+    int isNull;
 public:
     Instruction();
     Instruction(unsigned int line,unsigned int loc,unsigned long ObjectCode,QString label,QString Operator,QString Operand,int base_status,int format);
@@ -35,7 +36,7 @@ public:
     void setFormat(int format);
 
     bool hasOperatorSet();
-
+    bool Null();
 };
 
 #endif // INSTRUCTION_H

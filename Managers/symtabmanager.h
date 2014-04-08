@@ -14,7 +14,7 @@ public:
     Symbol search(QString s);
 
     void insertSymbol(Symbol sym);
-    void insertSymbol(QString lbl,int addr);
+    void insertSymbol(QString lbl,int addr,bool equ = false);
 
 };
 

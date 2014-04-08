@@ -3,6 +3,7 @@
 #include "Data/opcode.h"
 #include "QVector"
 #include "QString"
+#include "QDebug"
 
 class OptabManager
 {
@@ -16,6 +17,7 @@ public:
 
     Opcode getOpcode(QString mnmemonic);
     Opcode getOpcode(int i);
+    int getShiftedOpcode(QString mnmemonic);
 
     bool isOpcode(QString op);
 };

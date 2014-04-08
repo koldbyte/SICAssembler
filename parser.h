@@ -7,6 +7,8 @@
 #include "QStringList"
 #include "Managers/symtabmanager.h"
 #include "Managers/optabmanager.h"
+#include "Singleton.h"
+#include "QDebug"
 
 class Parser
 {
