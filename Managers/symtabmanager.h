@@ -10,11 +10,13 @@ class SymtabManager
     RegisterManager regM;
 public:
     SymtabManager();
-
+    void ResetState();
     Symbol search(QString s);
 
     void insertSymbol(Symbol sym);
     void insertSymbol(QString lbl,int addr,bool equ = false);
+
+    QVector<Symbol> getAllSymbols();
 
 };
 

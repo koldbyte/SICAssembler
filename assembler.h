@@ -25,6 +25,7 @@ class Assembler
 
 public:
     Assembler();
+    void ResetState();
     void Assemble(QString in);
     Instruction pass1(Instruction ins);
     Instruction pass2(Instruction ins,int sA);
@@ -34,6 +35,8 @@ public:
     QString prepareCode(unsigned long int oc,int l);
     QList<QString> getCode();
     QString prepareHeaderCode();
+
+    QList<Instruction> getAllInstructions();
 };
 
 #endif // ASSEMBLER_H

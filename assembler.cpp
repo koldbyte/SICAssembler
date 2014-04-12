@@ -306,3 +306,15 @@ QString Assembler::prepareHeaderCode(){
     return ret;
 }
 
+
+QList<Instruction> Assembler::getAllInstructions(){
+    return this->obj;
+}
+
+void Assembler::ResetState(){
+    programLength = 0;
+    ProgramName = "";
+    obj.clear();
+    code.clear();
+    startAddress = 0;
+}

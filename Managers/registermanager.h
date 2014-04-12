@@ -1,7 +1,7 @@
 #ifndef REGISTERMANAGER_H
 #define REGISTERMANAGER_H
 #include "QMap"
-
+#include "Singleton.h"
 class RegisterManager
 {
     QMap<QString,int> m_registers;

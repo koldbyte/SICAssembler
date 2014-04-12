@@ -3,16 +3,15 @@
 
 SymtabManager::SymtabManager(){
     //Initialize Symbol Table with Registers
-    RegisterManager regM = RegisterManager();
-    int rcount = regM.getRegisterCount();
+    RegisterManager *regM = &Singleton<RegisterManager>::Instance();
+    int rcount = regM->getRegisterCount();
     for(int i=0;i<rcount;i++){
-        Symbol sym = Symbol(regM.getRegister(i,0),regM.getAddress(i));
+        Symbol sym = Symbol(regM->getRegister(i,0),regM->getAddress(i));
         insertSymbol(sym);
     }
 }
 
 Symbol SymtabManager::search(QString s){
-
     foreach (Symbol sym, m_symbols) {
         if(sym.getLabel()==s){
             return sym;
@@ -37,6 +36,21 @@ void SymtabManager::insertSymbol(QString lbl,int addr,bool equ){
     if(ok){
         Symbol sym = Symbol(lbl,addr);
         sym.setEqu(equ);
+        insertSymbol(sym);
+    }
+}
+
+
+QVector<Symbol> SymtabManager::getAllSymbols(){
+    return m_symbols;
+}
+
+void SymtabManager::ResetState(){
+    m_symbols.clear();
+    RegisterManager *regM = &Singleton<RegisterManager>::Instance();
+    int rcount = regM->getRegisterCount();
+    for(int i=0;i<rcount;i++){
+        Symbol sym = Symbol(regM->getRegister(i,0),regM->getAddress(i));
         insertSymbol(sym);
     }
 }

@@ -23,6 +23,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void writeToConsole(QString s);
+    void updateSymbolsTab();
+    void updateInsTab();
+    void clearOutput();
 
 private slots:
     void on_actionOpen_triggered();
@@ -35,8 +38,11 @@ private slots:
 
     void on_actionConvert_Now_triggered();
 
+    void on_actionClear_Ouputs_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
 
 #endif // MAINWINDOW_H
+
