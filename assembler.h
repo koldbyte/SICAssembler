@@ -8,6 +8,7 @@
 #include <iomanip>
 #include "Singleton.h"
 #include "parser.h"
+#include "utils.h"
 #include "QTextStream"
 #include "QList"
 #include "Data/instruction.h"

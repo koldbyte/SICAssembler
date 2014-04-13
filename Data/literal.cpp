@@ -21,7 +21,7 @@ void Literal::setValue(int value) {
 }
 
 int Literal::getLength() {
-    return length;
+    return this->length;
 }
 
 void Literal::setLength(int length) {
@@ -29,7 +29,7 @@ void Literal::setLength(int length) {
 }
 
 int Literal::getLocation() {
-    return location;
+    return this->location;
 }
 
 void Literal::setLocation(int location) {
@@ -37,7 +37,7 @@ void Literal::setLocation(int location) {
 }
 
 int Literal::getLtorgDump() {
-    return ltorgDump;
+    return this->ltorgDump;
 }
 
 void Literal::setLtorgDump(int ltorgDump) {

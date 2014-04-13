@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     Data/literal.cpp \
     Gui/codeeditor.cpp \
     assembler.cpp \
-    Gui/loggersingleton.cpp
+    Gui/loggersingleton.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
     Managers/symtabmanager.h \
@@ -40,6 +41,7 @@ HEADERS  += mainwindow.h \
     Singleton.h \
     Gui/codeeditor.h \
     assembler.h \
-    Gui/loggersingleton.h
+    Gui/loggersingleton.h \
+    utils.h
 
 FORMS    += mainwindow.ui

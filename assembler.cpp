@@ -55,36 +55,15 @@ void Assembler::Assemble(QString in){
     }
 }
 
-int Assembler::uintToHexStr(unsigned int num,char* buff){
-    char hex [] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'A', 'B', 'C', 'D', 'E', 'F' };
-    int len=0,k=0;
-    do//for every 4 bits
-    {
-        //get the equivalent hex digit
-        buff[len] = hex[num & 0xF];
-        len++;
-        num>>=4;
-    }while(num!=0);
-    //since we get the digits in the wrong order reverse the digits in the buffer
-    for(;k<len/2;k++)
-    {//xor swapping
-        buff[k]^=buff[len-k-1];
-        buff[len-k-1]^=buff[k];
-        buff[k]^=buff[len-k-1];
-    }
-    //null terminate the buffer and return the length in digits
-    buff[len]='\0';
-    return len;
-}
 
 QString Assembler::prepareCode(unsigned long int oc,int l){
     char buff[16];
-    int length;
-    length = this->uintToHexStr(oc,buff);
+    //int length;
+    //length = this->uintToHexStr(oc,buff);
     std::string a = buff;
     QString aa = QString::fromStdString(a);
 
-    length = this->uintToHexStr(l,buff);
+    //length = this->uintToHexStr(l,buff);
     std::string b = buff;
     QString bb = QString::fromStdString(b);
 
@@ -98,6 +77,7 @@ QString Assembler::prepareCode(unsigned long int oc,int l){
 Instruction Assembler::pass1(Instruction ins){
     SymtabManager *symMan = &Singleton<SymtabManager>::Instance();
     OptabManager *opMan = &Singleton<OptabManager>::Instance();
+    Utils *utils = &Singleton<Utils>::Instance();
 
     QString oper = ins.getOperator();
 
@@ -120,11 +100,11 @@ Instruction Assembler::pass1(Instruction ins){
         //-------
         startAddress = loc;
         if(oper.compare("RESW")==0){
-            loc += 3*(convertOperand(ins.getOperand()));
+            loc += 3*(utils->convertOperand(ins.getOperand()));
         }else if(oper.compare("RESB")==0){
-            loc += convertOperand(ins.getOperand());
+            loc += utils->convertOperand(ins.getOperand());
         }else if(oper.compare("BYTE")==0){
-            loc += convertOperand(ins.getOperand());
+            loc += utils->convertOperand(ins.getOperand());
         }else if(oper.compare("WORD")==0){
             loc += 3;
         }else if(oper.compare("LTORG")==0){
@@ -158,6 +138,8 @@ Instruction Assembler::pass2(Instruction ins,int sA = 0){
     SymtabManager *symMan = &Singleton<SymtabManager>::Instance();
     OptabManager *opMan = &Singleton<OptabManager>::Instance();
     RegisterManager *regMan = &Singleton<RegisterManager>::Instance();
+    Utils *utils = &Singleton<Utils>::Instance();
+
 
     QString operand = ins.getOperand();
     QString oper = ins.getOperator();
@@ -173,7 +155,7 @@ Instruction Assembler::pass2(Instruction ins,int sA = 0){
         return ins;
     }
     if(oper.compare("BYTE")==0){
-        ins.setObjectCode(convertOperand(operand));
+        ins.setObjectCode(utils->convertOperand(operand));
         return ins;
     }
     if(oper.compare("WORD")==0){
@@ -206,27 +188,7 @@ Instruction Assembler::pass2(Instruction ins,int sA = 0){
 }
 
 
-int Assembler::convertOperand(QString s){
-    QChar ch = s.at(0);
-    if(ch=='#'){
-        return readOperand(s.remove(0,1),10);
-    }
-    if(ch =='C'){
-        return s.length() -3;
-    }
-    if(ch.isDigit()){
-        return readOperand(s,10);
-    }
-    if(s.startsWith("X'") && s.endsWith("'")){
-        s.remove(0,2).chop(1);
-        return readOperand(s,16);
-    }
-    return 0;
-}
 
-int Assembler::readOperand(QString s,int base = 10){
-    return (int) strtol(s.toStdString().c_str(), NULL,base);
-}
 
 QList<QString> Assembler::getCode(){
     return this->code;

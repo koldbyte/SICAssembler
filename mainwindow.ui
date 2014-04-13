@@ -91,7 +91,7 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -279,6 +279,15 @@
    <header location="global">Gui/codeeditor.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>SourceCodeTextEdit</tabstop>
+  <tabstop>ObjectCodeText</tabstop>
+  <tabstop>sidetabs</tabstop>
+  <tabstop>symbols_table</tabstop>
+  <tabstop>ins_table</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>consoleText</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
