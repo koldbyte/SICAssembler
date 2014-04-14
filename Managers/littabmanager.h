@@ -19,7 +19,7 @@ public:
     QString flushLtorg();
     int convertedOperand(QString s);
     int getStBytes(QString s);
-
+    QMap<QString, Literal> getLittab();
 
 };
 

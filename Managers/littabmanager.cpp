@@ -50,4 +50,8 @@ QString LittabManager::flushLtorg() {
     return ret;
 }
 
+QMap<QString, Literal> LittabManager::getLittab(){
+    return this->littab;
+}
+
 

@@ -29,7 +29,7 @@ Instruction Parser::parseLine(QString line){
     }
 
     //Split the line into tokens
-    QStringList tokens = line.split(' ',QString::SkipEmptyParts);
+    QStringList tokens = line.split(' ',QString::KeepEmptyParts);
     qDebug() << "Parser: Split line into tokens :: size " << qPrintable(QString::number(tokens.size()))<< " -> " << qPrintable(tokens.join(','));
 
     Instruction ins = Instruction();

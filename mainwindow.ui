@@ -126,7 +126,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QTabWidget" name="sidetabs">
+      <widget class="QTabWidget" name="LiteralTabs">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -162,6 +162,27 @@
          <string>Instructions</string>
         </attribute>
         <widget class="QTableWidget" name="ins_table">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>221</width>
+           <height>451</height>
+          </rect>
+         </property>
+         <property name="rowCount">
+          <number>0</number>
+         </property>
+         <property name="columnCount">
+          <number>0</number>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="literalTab">
+        <attribute name="title">
+         <string>Literals</string>
+        </attribute>
+        <widget class="QTableWidget" name="lit_table">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -282,7 +303,7 @@
  <tabstops>
   <tabstop>SourceCodeTextEdit</tabstop>
   <tabstop>ObjectCodeText</tabstop>
-  <tabstop>sidetabs</tabstop>
+  <tabstop>LiteralTabs</tabstop>
   <tabstop>symbols_table</tabstop>
   <tabstop>ins_table</tabstop>
   <tabstop>tabWidget</tabstop>

@@ -25,6 +25,7 @@ public:
     void writeToConsole(QString s);
     void updateSymbolsTab();
     void updateInsTab();
+    void updateLiteralTab();
     void clearOutput();
 
 private slots:

@@ -29,6 +29,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ins_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->ins_table->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->ins_table->setRowCount(0);
+
+    //Initialize Literal Table Widget
+    //string  value length location
+    ui->lit_table->setColumnCount(4);
+    QStringList m_TableHeader3;
+    m_TableHeader3 << "Label" << "Value" << "Length" << "Location";
+    ui->lit_table->setHorizontalHeaderLabels(m_TableHeader3);
+    ui->lit_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->lit_table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->lit_table->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->lit_table->setRowCount(0);
+
 }
 
 MainWindow::~MainWindow()
@@ -127,6 +139,9 @@ void MainWindow::on_actionConvert_Now_triggered()
 
     //update Ins Table
     this->updateInsTab();
+
+    //update Lit Table
+    this->updateLiteralTab();
 }
 
 void MainWindow::writeToConsole(QString s){
@@ -145,11 +160,12 @@ void MainWindow::updateSymbolsTab(){
     QVector<Symbol> ::iterator it;
     ui->symbols_table->setRowCount(sym.size());
     int i=0;
-    for(it=sym.begin();it!=sym.end();it++){
-        ui->symbols_table->setItem(i,0, new QTableWidgetItem(sym[i].getLabel()));
-        ui->symbols_table->setItem(i,1, new QTableWidgetItem(QString::number(sym[i].getAddress())));
+    for(it=sym.begin()+7;it!=sym.end();it++){
+        ui->symbols_table->setItem(i,0, new QTableWidgetItem(it->getLabel()));
+        ui->symbols_table->setItem(i,1, new QTableWidgetItem(QString::number(it->getAddress())));
         i++;
     }
+    ui->symbols_table->setRowCount(i);
 }
 
 void MainWindow::updateInsTab(){
@@ -177,6 +193,30 @@ void MainWindow::updateInsTab(){
         ui->ins_table->setRowCount(i);
 }
 
+void MainWindow::updateLiteralTab(){
+    while (ui->lit_table->rowCount() > 0){
+            ui->lit_table->removeRow(0);
+        }
+        ui->lit_table->setRowCount(0);
+
+        LittabManager *ltMan = &Singleton<LittabManager>::Instance();
+        QMap<QString, Literal> lit = ltMan->getLittab();
+        QMap<QString, Literal> ::iterator it;
+        ui->lit_table->setRowCount(lit.size());
+        qDebug() << "Literal Table size is" << qPrintable(QString::number(lit.size()));
+        int i=0;
+        for(it=lit.begin();it!=lit.end();it++){
+            //string  value length location
+                ui->lit_table->setItem(i,0, new QTableWidgetItem(it.key()));
+                ui->lit_table->setItem(i,1, new QTableWidgetItem(it->getValue()));
+                ui->lit_table->setItem(i,2, new QTableWidgetItem(QString::number(it->getLength())));
+                ui->lit_table->setItem(i,3, new QTableWidgetItem(QString::number(it->getLocation())));
+                i++;
+
+        }
+        ui->lit_table->setRowCount(i);
+}
+
 void MainWindow::clearOutput(){
     ui->ObjectCodeText->clear();
     ui->ObjectCodeText->setPlainText("");
@@ -190,6 +230,11 @@ void MainWindow::clearOutput(){
             ui->ins_table->removeRow(0);
     }
     ui->ins_table->setRowCount(0);
+
+    while (ui->lit_table->rowCount() > 0){
+            ui->lit_table->removeRow(0);
+    }
+    ui->lit_table->setRowCount(0);
 
     //reset instance of manager classes..
     SymtabManager *symMan = &Singleton<SymtabManager>::Instance();
