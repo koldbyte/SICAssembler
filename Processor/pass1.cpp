@@ -14,14 +14,15 @@ Instruction Pass1::doPass1(Instruction ins){
 
     if(oper.compare("START")==0){
         //startAddress = (int) strtol(ins.getOperand().toStdString().c_str(), NULL, 16);
-        StartAddress = QString::number(ins.getOperand().toInt(),16).toInt();
+        StartAddress = utils->readOperand(ins.getOperand(),10);
+        //StartAddress = QString::number(ins.getOperand().toInt(),16).toInt();
         oldLocSt = StartAddress;
         ins.setloc(StartAddress);
         programName = ins.getLabel();
         return ins;
     }
 
-    int loc = StartAddress;
+    int loc = oldLocSt;
     if(oper.compare("END")!=0){
         QString label = ins.getLabel();
         if(oper.compare("EQU")==0){
@@ -37,12 +38,13 @@ Instruction Pass1::doPass1(Instruction ins){
         }else if(oper.compare("RESB")==0){
             loc += utils->convertOperand(ins.getOperand());
         }else if(oper.compare("BYTE")==0){
-            loc += utils->convertOperand(ins.getOperand());
+            //loc += utils->convertOperand(ins.getOperand());
+            loc += utils->getStBytes(ins.getOperand());
         }else if(oper.compare("WORD")==0){
             loc += 3;
         }else if(oper.compare("LTORG")==0){
             //TODO get location from literals
-            //loc =
+            loc = ltMan->processLtorg(loc);
         }else if(opMan->isOpcode(oper)){
             int format = opMan->getOpcode(oper).getFormat();
             if(format !=-1){

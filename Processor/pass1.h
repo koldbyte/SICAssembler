@@ -4,7 +4,7 @@
 #include "Managers/littabmanager.h"
 #include "Managers/symtabmanager.h"
 #include "Managers/optabmanager.h"
-
+#include "QDebug"
 class Pass1
 {
     int StartAddress, oldLocSt;
