@@ -1,7 +1,8 @@
 #ifndef LITERAL_H
 #define LITERAL_H
 #include "QString"
-
+#include "Singleton.h"
+#include "utils.h"
 class Literal
 {
     int value;

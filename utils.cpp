@@ -63,3 +63,31 @@ int Utils::uintToHexStr(unsigned int num,char* buff){
     buff[len]='\0';
     return len;
 }
+
+QString Utils::expand(int value,int size){
+    QString ret = QString::number(value,16);
+    //TODO Verify
+    //QString ret = Integer.toHexString(value);
+    while(ret.length() < size) {
+        ret = '0' + ret;
+    }
+    return ret;
+}
+
+QString Utils::intToHexString(int i) {
+    std::stringstream ss;
+    ss << std::hex << std::showbase << i;
+    return QString::fromStdString(ss.str());
+}
+
+QString Utils::base64_encode(QString string){
+    QByteArray ba;
+    ba.append(string);
+    return ba.toBase64();
+}
+
+QString Utils::base64_decode(QString string){
+    QByteArray ba;
+    ba.append(string);
+    return QByteArray::fromBase64(ba);
+}

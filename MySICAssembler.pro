@@ -26,7 +26,11 @@ SOURCES += main.cpp\
     Gui/codeeditor.cpp \
     assembler.cpp \
     Gui/loggersingleton.cpp \
-    utils.cpp
+    utils.cpp \
+    Data/objectfile.cpp \
+    Managers/modtabmanager.cpp \
+    Processor/pass1.cpp \
+    Processor/pass2.cpp
 
 HEADERS  += mainwindow.h \
     Managers/symtabmanager.h \
@@ -42,6 +46,10 @@ HEADERS  += mainwindow.h \
     Gui/codeeditor.h \
     assembler.h \
     Gui/loggersingleton.h \
-    utils.h
+    utils.h \
+    Data/objectfile.h \
+    Managers/modtabmanager.h \
+    Processor/pass1.h \
+    Processor/pass2.h
 
 FORMS    += mainwindow.ui

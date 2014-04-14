@@ -6,14 +6,8 @@ Literal::Literal(){
 }
 
 QString Literal::getValue() {
-    QString ret = QString::number(value,16);
-    //TODO Verify
-    //QString ret = Integer.toHexString(value);
-    while(ret.length() < length * 2) {
-        ret = '0' + ret;
-    }
-    return ret;
-    //return Utils.expand(value, length * 2);
+    Utils *utils = &Singleton<Utils>::Instance();
+    return utils->expand(value, length * 2);
 }
 
 void Literal::setValue(int value) {

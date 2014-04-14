@@ -115,7 +115,9 @@ void MainWindow::on_actionConvert_Now_triggered()
         cc.append(x);
         cc.append("\r\n");
     }*/
-    QString cc = assembler->prepareHeaderCode();
+    //TESTING
+    QString cc = assembler->getFinalCode();
+    //QString cc = assembler->prepareHeaderCode();
     ui->ObjectCodeText->clear();
     ui->ObjectCodeText->setPlainText("");
     ui->ObjectCodeText->setPlainText(cc);
@@ -163,13 +165,16 @@ void MainWindow::updateInsTab(){
         int i=0;
         for(it=ins.begin();it!=ins.end();it++){
             //label operator operand loc object code
-            ui->ins_table->setItem(i,0, new QTableWidgetItem(ins[i].getLabel()));
-            ui->ins_table->setItem(i,1, new QTableWidgetItem(ins[i].getOperator()));
-            ui->ins_table->setItem(i,2, new QTableWidgetItem(ins[i].getOperand()));
-            ui->ins_table->setItem(i,3, new QTableWidgetItem(QString::number(ins[i].getloc())));
-            ui->ins_table->setItem(i,4, new QTableWidgetItem(QString::number(ins[i].getObjectCode(),16)));
-            i++;
+            if(it->getObjectCode()!=""){
+                ui->ins_table->setItem(i,0, new QTableWidgetItem(it->getLabel()));
+                ui->ins_table->setItem(i,1, new QTableWidgetItem(it->getOperator()));
+                ui->ins_table->setItem(i,2, new QTableWidgetItem(it->getOperand()));
+                ui->ins_table->setItem(i,3, new QTableWidgetItem(QString::number(it->getloc())));
+                ui->ins_table->setItem(i,4, new QTableWidgetItem(it->getObjectCode()));
+                i++;
+            }
         }
+        ui->ins_table->setRowCount(i);
 }
 
 void MainWindow::clearOutput(){

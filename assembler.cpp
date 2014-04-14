@@ -3,6 +3,7 @@
 Assembler::Assembler(){
     programLength = 0;
     ProgramName = "";
+    programObjectData = "";
 }
 
 void Assembler::Assemble(QString in){
@@ -10,11 +11,9 @@ void Assembler::Assemble(QString in){
 
     Parser *parser = &Singleton<Parser>::Instance();
     Instruction ins;
-    QString line = "";
-    QStringList all = in.split("\n");
-    //QTextStream stream(in);
     int lines = 0;
-    //while((line = stream.readLine())!= QString::null){
+    QStringList all = in.split("\n");
+    Pass1 *p1 = new Pass1();
     foreach(QString line, all){
         lines++;
 
@@ -22,40 +21,49 @@ void Assembler::Assemble(QString in){
 
         ins = parser->parseLine(line);
 
-        qDebug() << "Parsed Line:: Found Instruction OPER" << qPrintable(ins.getOperator()) << " ObjectCode" << qPrintable(QString::number(ins.getObjectCode()));
+        qDebug() << "Parsed Line:: Found Instruction OPER" << qPrintable(ins.getOperator()) << " ObjectCode" << qPrintable(ins.getObjectCode());
 
         if(ins.Null()){
             ins = Instruction();
             obj.push_back(ins);
+            continue;
         }
-        ins = this->pass1(ins);
+        qDebug() << "Pass1: Starting on instruction :: OPER" << qPrintable(ins.getOperator()) << " ObjectCode" << qPrintable(ins.getObjectCode());
+        ins = p1->doPass1(ins);
+        qDebug() << "Pass1: Returned instruction :: OPER" << qPrintable(ins.getOperator()) << " ObjectCode" << qPrintable(ins.getObjectCode());
+
         obj.push_back(ins);
     }
 
     qDebug() << "Pass1 Completed.. parsed total lines :" << qPrintable (QString::number(lines));
     qDebug() << "OBJ size" << qPrintable(QString::number(obj.size()));
 
-    //ins = pass2(ins,startAddress);
+    Pass2 *p2 = new Pass2(p1->getInitialAddress());
+    ObjectFile *objData = new ObjectFile();
+    objData->writeHeader(p1->getLength(),p1->getProgramName(), p1->getInitialAddress());
+
     lines = 0;
     QList<Instruction> ::iterator it;
     for(it= obj.begin();it!=obj.end();it++){
-    //foreach (Instruction i, obj) {
         lines++;
-        qDebug() << "Pass2: Starting on instruction :: OPER" << qPrintable((*it).getOperator()) << " ObjectCode" << qPrintable(QString::number((*it).getObjectCode()));
+        qDebug() << "Pass2: Starting on instruction :: OPER" << qPrintable((*it).getOperator()) << " ObjectCode" << qPrintable((*it).getObjectCode());
         if(!(*it).Null()){ //is valid
-            *it = pass2(*it,0);
-            qDebug() << "Pass2: Returned instruction :: OPER" << qPrintable((*it).getOperator()) << " ObjectCode" << qPrintable(QString::number((*it).getObjectCode()));
+            *it = p2->doPass2(*it);
+            qDebug() << "Pass2: Returned instruction :: OPER" << qPrintable((*it).getOperator()) << " ObjectCode" << qPrintable((*it).getObjectCode());
             //TODO verify this
-            if(QString::number((*it).getObjectCode()) != QString::null){
-                code.push_back(this->prepareCode((*it).getObjectCode(),(*it).getloc()));
+            if((*it).getObjectCode() != QString::null){
+                objData->write(it->getObjectCode(), it->getloc());
+                //code.push_back(this->prepareCode((*it).getObjectCode(),(*it).getloc()));
             }else if((*it).getOperator().compare("RESB")==0 || (*it).getOperator().compare("RESW")==0){
-                //TODO Flush
+                objData->flush(it->getloc());
             }
         }
     }
+    objData->writeEndOP(p1->getInitialAddress());
+    this->programObjectData = objData->getFinal();
 }
 
-
+/*
 QString Assembler::prepareCode(unsigned long int oc,int l){
     char buff[16];
     //int length;
@@ -188,8 +196,6 @@ Instruction Assembler::pass2(Instruction ins,int sA = 0){
 }
 
 
-
-
 QList<QString> Assembler::getCode(){
     return this->code;
 }
@@ -266,6 +272,11 @@ QString Assembler::prepareHeaderCode(){
         qDebug() << qPrintable(tblock) << " || " << qPrintable(tblock1);
     }
     return ret;
+}
+*/
+
+QString Assembler::getFinalCode(){
+    return this->programObjectData;
 }
 
 

@@ -54,3 +54,46 @@ void SymtabManager::ResetState(){
         insertSymbol(sym);
     }
 }
+
+void SymtabManager::addLabel(QString label, int locSt){
+    if(hasLabel(label)) {
+        qCritical() << "Error: Label " <<  label  <<  " is defined twice!";
+    }
+
+    //System.out.println("Label: " + label + " " + locSt + " hex " + int.toHexString(locSt));
+    insertSymbol(label,locSt);
+}
+
+bool SymtabManager::hasLabel(QString label){
+    foreach (Symbol sym, m_symbols) {
+        if(sym.getLabel()==label){
+            return true;
+        }
+    }
+    return false;
+}
+
+void SymtabManager::addEquals(QString label, int value){
+    if(hasLabel(label)) {
+        qCritical() << "Error: Label " <<  label  <<  " is defined twice!";
+    }
+    insertSymbol(label, value, true);
+}
+
+bool SymtabManager::isEqu(QString s) {
+    return search(s).getEqu();
+}
+
+int SymtabManager::getloc(QString s){
+    return search(s).getAddress();
+}
+
+int SymtabManager::getOperandValue(QString o) {
+    if(hasLabel(o)) {
+        return getloc(o);
+    } else {
+        int val = 0;
+        val = o.toInt();
+        return val;
+    }
+}
