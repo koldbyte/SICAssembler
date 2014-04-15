@@ -2,6 +2,7 @@
 #define UTILS_H
 #include "QString"
 #include "bits/stdc++.h"
+#include "QDebug"
 class Utils
 {
 public:

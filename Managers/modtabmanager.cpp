@@ -1,7 +1,6 @@
 #include "modtabmanager.h"
 
-ModTabManager::ModTabManager()
-{
+ModTabManager::ModTabManager(){
 }
 
 

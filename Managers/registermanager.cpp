@@ -22,8 +22,8 @@ int RegisterManager::getAddress(QString label){
 int RegisterManager::getAddress(int i){
     if(i>=0 && i<=m_registers.size()){
         return (m_registers.begin()+i).value();
-        //return m_registers.value(i);
-    }else return -1;
+    }else
+        return -1;
 }
 
 

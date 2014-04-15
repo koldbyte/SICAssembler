@@ -41,6 +41,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lit_table->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->lit_table->setRowCount(0);
 
+    ui->SourceCodeTextEdit->setFocus();
+    //testing only
+    //OptabManager *opMan = &Singleton<OptabManager>::Instance();
+    //qDebug() << qPrintable(QString::number(opMan->getShiftedOpcode("STL")));
 }
 
 MainWindow::~MainWindow()
@@ -118,9 +122,10 @@ void MainWindow::on_actionConvert_Now_triggered()
 {
     clearOutput();
     ui->ObjectCodeText->clear();
-    //QList<QString> code;
     Assembler *assembler = &Singleton<Assembler>::Instance();
     assembler->Assemble(ui->SourceCodeTextEdit->toPlainText());
+
+    //QList<QString> code;
     /*code = assembler->getCode();
     QString cc = "";
     foreach(QString x , code){
@@ -133,7 +138,6 @@ void MainWindow::on_actionConvert_Now_triggered()
     ui->ObjectCodeText->clear();
     ui->ObjectCodeText->setPlainText("");
     ui->ObjectCodeText->setPlainText(cc);
-
     //update Symbols Table
     this->updateSymbolsTab();
 
@@ -162,10 +166,11 @@ void MainWindow::updateSymbolsTab(){
     int i=0;
     for(it=sym.begin()+7;it!=sym.end();it++){
         ui->symbols_table->setItem(i,0, new QTableWidgetItem(it->getLabel()));
-        ui->symbols_table->setItem(i,1, new QTableWidgetItem(QString::number(it->getAddress())));
+        ui->symbols_table->setItem(i,1, new QTableWidgetItem(QString::number(it->getAddress(),16)));
         i++;
     }
     ui->symbols_table->setRowCount(i);
+
 }
 
 void MainWindow::updateInsTab(){
@@ -185,7 +190,7 @@ void MainWindow::updateInsTab(){
                 ui->ins_table->setItem(i,0, new QTableWidgetItem(it->getLabel()));
                 ui->ins_table->setItem(i,1, new QTableWidgetItem(it->getOperator()));
                 ui->ins_table->setItem(i,2, new QTableWidgetItem(it->getOperand()));
-                ui->ins_table->setItem(i,3, new QTableWidgetItem(QString::number(it->getloc())));
+                ui->ins_table->setItem(i,3, new QTableWidgetItem(QString::number(it->getloc(),16)));
                 ui->ins_table->setItem(i,4, new QTableWidgetItem(it->getObjectCode()));
                 i++;
             }

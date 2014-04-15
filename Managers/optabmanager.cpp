@@ -70,8 +70,8 @@ OptabManager::OptabManager(){
     insertOpcode("NOBASE", -1, 0x0);
     insertOpcode("EQU", -1, 0x0);
     insertOpcode("LTORG", -1, 0x0);
-    qDebug() << "Size of OPcode table is " << qPrintable(QString::number(m_optab.size()));
-    qDebug() << "First Opcode " << qPrintable(m_optab[0].getMnemonic()) << qPrintable(QString::number(m_optab[0].getMachinecode()));
+    //qDebug() << "Size of OPcode table is " << qPrintable(QString::number(m_optab.size()));
+    //qDebug() << "First Opcode " << qPrintable(m_optab[0].getMnemonic()) << qPrintable(QString::number(m_optab[0].getMachinecode()));
 }
 
 void OptabManager::insertOpcode(Opcode op){
@@ -81,7 +81,6 @@ void OptabManager::insertOpcode(Opcode op){
 void OptabManager::insertOpcode(QString Mnemonic,int format,int machinecode){
     Opcode op = Opcode(Mnemonic,format,machinecode);
     this->m_optab.push_back(op);
-    //qDebug() << "Inserting OPcode";
 }
 
 Opcode OptabManager::getOpcode(QString mnmemonic){
@@ -106,7 +105,6 @@ int OptabManager::getShiftedOpcode(QString mnemonic){
     if(format == 1) return op.getMachinecode();
     else if(format == 2) return op.getMachinecode() << 8;
     else return op.getMachinecode() << 16;
-
 }
 
 bool OptabManager::isOpcode(QString op){
@@ -121,7 +119,3 @@ bool OptabManager::isOpcode(QString op){
     }
     return ret;
 }
-
-
-
-

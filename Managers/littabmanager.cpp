@@ -2,14 +2,13 @@
 
 LittabManager::LittabManager(){
     ltorgIter = 0;
-    //littab = new HashMap<String, Literal>();
 }
 
 
 void LittabManager::addLiteral(QString name, QString value) {
     Utils *utils = &Singleton<Utils>::Instance();
-
     Literal *l = new Literal();
+
     l->setLength(utils->getStBytes(value));
     l->setValue(utils->convertOperand(value));
     //littab.insert(value, *l);

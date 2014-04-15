@@ -28,7 +28,7 @@ Instruction Pass2::doPass2(Instruction ins){
     QString operand = ins.getOperand();
     QString oper = ins.getOperator();
     int com = opMan->getShiftedOpcode(oper);
-
+    //qDebug() << "Pass2: Initialized com to " << qPrintable(QString::number(com,16));
     if(oper.compare("BASE")==0){
        isBase = true;
        baseAddress = symMan->search(operand).getAddress();
@@ -60,10 +60,14 @@ Instruction Pass2::doPass2(Instruction ins){
             com += regMan->getAddress(operand) << 4;
         }
     }else if(format == 3){
-        if (!ins.isExtended())
+        if (!ins.isExtended()){
+            //qDebug() << "Pass2: Not extended";
             com = objectFormat3(ins, com);
-        else {
+            //qDebug() << "Pass2: com set to " << qPrintable(QString::number(com,16));
+        }else {
+            //qDebug() << "Pass2: extended";
             com = objectFormat4(ins, com);
+            //qDebug() << "Pass2: com set to " << qPrintable(QString::number(com,16));
         }
     }
 
@@ -88,7 +92,6 @@ int Pass2::objectFormat4(Instruction v, int command){
     int address = 0;
 
     if (operand !=QString::null && operand.contains(",X")) {
-        // indeksno
         command |= BIT_X_4;
         operand = operand.left(operand.indexOf(","));
 
@@ -99,30 +102,22 @@ int Pass2::objectFormat4(Instruction v, int command){
         command += address;
 
     } else if (operand !=QString::null && operand.startsWith("#")) {
-        //Direktno naslavljanje
-
-        command |= BIT_I_4; // bit I is set to 1
-        //address = symTab->getOperandValue(operand.substring(1));
+        command |= BIT_I_4;
         address = symTab->getOperandValue(operand.remove(0,1));
-
         command += address;
     } else if (operand !=QString::null && !operand.startsWith("#")) {
-        //Neposredno naslavljanje
-
-        command |= BIT_I_4; // bit I is set to 1
-
+        command |= BIT_I_4;
         if (!v.isIndirectAddressing()) {
             command |= BIT_I_4;
         }
-
+        if(v.isExtended()){
+            command |= BIT_N_4;
+        }
         address = symTab->getOperandValue(operand);
-
         if(startAddress == 0) {
-            //relocation
             QString mod = "M" + utils->expand(v.getloc() + 1, 6) + "05";
             modMan->addMod(mod);
         }
-
         command += address;
     }
     return command;
@@ -132,37 +127,21 @@ int Pass2::objectFormat3(Instruction v, int command){
     SymtabManager *symTab = &Singleton<SymtabManager>::Instance();
     LittabManager *litman = &Singleton<LittabManager>::Instance();
 
-    //System.out.print("A-Fromat 3: " + Integer.toHexString(command) + " "
-    //		+ v.getMnemonic() + " ");
-
     QString operand = v.getOperand();
-
     int address = 0;
 
     if (operand != QString::null && operand.contains(",X")) {
-        //System.out.print("Indexno. ");
-        // Indexno naslavljanje
         command |= BIT_X_3;
-
-        // Bita N in I sta lahko tudi 0.
         command |= BIT_N_3;
         command |= BIT_I_3;
 
         operand = operand.left(operand.indexOf(","));
-
         address = symTab->getOperandValue(operand);
         int pc = v.getloc();
         address = pc - address;
-
-        // System.out.print("address: " + address + " " + pc + " ");
-        // Integer.toHexString(command) + " ");
-
         // command += address;
-
         command = pcOrBase(operand, command, address);
-
     } else if (operand !=QString::null && !operand.startsWith("#")) {
-        // System.out.print("PC/Base ");
         // First of all try PC-relative,
         // If the offset is outside boundaries, start with the base.
         int dn;
@@ -170,39 +149,26 @@ int Pass2::objectFormat3(Instruction v, int command){
 
         if(v.isOperandInLiteral()) {
             dn = litman->addressOfLiteral(operand);
-            //System.out.println("address of literal " + dn);
         } else {
             dn = symTab->getOperandValue(operand);
         }
 
-        // System.out.println(dn + " - " + pc);
-
         int offset = dn - pc;
-
         // Bits N and I can also be 0...
         command |= BIT_N_3;
-
         if (!v.isIndirectAddressing()) {
             command |= BIT_I_3;
         }
-
         // command += trimInt(offset);
-
         command = pcOrBase(operand, command, offset);
-
-        // System.out.println("offset: " + offset);
-
     } else if (operand !=QString::null && operand.startsWith("#")) { // direct addressing
-        // System.out.print("Direct");
         command |= BIT_I_3; // bit I is set to 1
         operand = operand.remove(0,1);
         address = symTab->getOperandValue(operand);
 
         if (symTab->hasLabel(operand) && !symTab->isEqu(operand)) {
-            //int dn = symTab.getOperandValue(operand.substring(1));
             int pc = v.getloc();
             int offset = address - pc;
-
             command = pcOrBase(operand, command, offset);
         } else
             command += address;
@@ -214,15 +180,10 @@ int Pass2::pcOrBase( QString operand, int command,int offset){
     int dn;
     SymtabManager *symTab = &Singleton<SymtabManager>::Instance();
 
-    // System.out.print(" offset: " + offset + " " +
-    // Integer.toHexString(offset) + " ");
-
     if (offset >= -2048 && offset <= 2047) {
         // PC-relative
         command |= BIT_P_3;
-
         command += trimInt(offset);
-
     } else {
         if (!isBase) {
             // Error
@@ -230,18 +191,14 @@ int Pass2::pcOrBase( QString operand, int command,int offset){
         }
 
         dn = symTab->getOperandValue(operand);
-
         offset = dn - baseAddress;
-
         command |= BIT_B_3;
-
         command += trimInt(offset);
 
         if (!(offset >= 0 && offset <= 4095)) {
             qCritical() << "Invalid offset, the base address is Single.\n";
         }
     }
-    // System.out.println("offset " + offset);
     return command;
 }
 
@@ -250,9 +207,7 @@ int Pass2::trimInt(int i) {
         return i;
 
     QString s = QString::number( i, 2);
-    s = s.remove(0,s.length()-12);
-    //s = s.substring(s.length() - 12);
-    //return Integer.parseInt(s, 2);
+    s = QString::fromStdString(s.toStdString().substr(s.length()-12));
     return QString::number(s.toInt(),2).toInt();
 }
 

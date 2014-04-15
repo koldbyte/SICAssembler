@@ -13,8 +13,9 @@ Instruction Pass1::doPass1(Instruction ins){
     QString oper = ins.getOperator();
 
     if(oper.compare("START")==0){
+        //Start address in the source program is given as Hex...store it as decimal.
         //startAddress = (int) strtol(ins.getOperand().toStdString().c_str(), NULL, 16);
-        StartAddress = utils->readOperand(ins.getOperand(),10);
+        StartAddress = utils->readOperand(ins.getOperand(),16);
         //StartAddress = QString::number(ins.getOperand().toInt(),16).toInt();
         oldLocSt = StartAddress;
         ins.setloc(StartAddress);
@@ -23,10 +24,13 @@ Instruction Pass1::doPass1(Instruction ins){
     }
 
     int loc = oldLocSt;
+    ins.setloc(loc);
+
     if(oper.compare("END")!=0){
         QString label = ins.getLabel();
         if(oper.compare("EQU")==0){
-            symMan->insertSymbol(label,(int) strtol(ins.getOperand().toStdString().c_str(), NULL,10),true);
+            //symMan->insertSymbol(label,(int) strtol(ins.getOperand().toStdString().c_str(), NULL,16),true);
+            symMan->insertSymbol(label,ins.getOperand().toInt(0,16),true);
         }else if(label != QString::null){
             symMan->insertSymbol(label,loc);
         }else if(ins.isOperandInLiteral()){
@@ -43,7 +47,7 @@ Instruction Pass1::doPass1(Instruction ins){
         }else if(oper.compare("WORD")==0){
             loc += 3;
         }else if(oper.compare("LTORG")==0){
-            //TODO get location from literals
+            // get location from literals
             loc = ltMan->processLtorg(loc);
         }else if(opMan->isOpcode(oper)){
             int format = opMan->getOpcode(oper).getFormat();
@@ -55,14 +59,15 @@ Instruction Pass1::doPass1(Instruction ins){
             }
         }else{
             //error
+            ins.setError("Invalid Operator " + oper);
             qCritical()<< "Invalid Operator "  << oper;
         }
     }else{
-        //TODO update loc using literal table.
+        //update loc using literal table.
         loc = ltMan->processLtorg(loc);
     }
     oldLocSt = loc;
-    ins.setloc(loc);
+    //ins.setloc(loc);
     //TODO OUtput log to console here
     qDebug() << "Pass 1: " << ins.getOperator() << " "  << utils->intToHexString(ins.getloc());
     return ins;

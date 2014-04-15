@@ -22,9 +22,6 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext &context, con
     }
 
     LoggerSingleton *logger=LoggerSingleton::getInstance();
-//Set my QTextEdit
-   // logger->setTextEdit(log);
-//Write the message to QTextEdit
     logger->writeMessage(txt);
 }
 

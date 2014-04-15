@@ -21,6 +21,7 @@ class Instruction
     bool valid;
     bool indirectAddressing;
     bool operandInLiteral;
+    QString error;
 public:
     Instruction();
     Instruction(unsigned int line,unsigned int loc,QString ObjectCode,QString label,QString Operator,QString Operand,int base_status,int format);
@@ -36,6 +37,7 @@ public:
     bool isOperandInLiteral();
     bool isExtended();
     bool isIndirectAddressing();
+    QString getError();
 
     void setLine(unsigned int line);
     void setloc(unsigned int loc);
@@ -47,6 +49,7 @@ public:
     void setBase_status(int bs);
     void setFormat(int format);
     void setExtended(bool ext);
+    void setError(QString err);
 
     bool hasOperatorSet();
     bool Null();

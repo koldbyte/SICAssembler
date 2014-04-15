@@ -60,7 +60,6 @@ void SymtabManager::addLabel(QString label, int locSt){
         qCritical() << "Error: Label " <<  label  <<  " is defined twice!";
     }
 
-    //System.out.println("Label: " + label + " " + locSt + " hex " + int.toHexString(locSt));
     insertSymbol(label,locSt);
 }
 

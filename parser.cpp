@@ -18,7 +18,7 @@ Instruction Parser::parseLine(QString line){
     if(line.isEmpty()) return Instruction();
 
     //no need to process lines with comment only
-    if(line.contains('.') && line.length()==1 || line.startsWith('.')){
+    if((line.contains('.') && line.length()==1) || line.startsWith('.')){
         return Instruction();
     }
 
@@ -29,7 +29,9 @@ Instruction Parser::parseLine(QString line){
     }
 
     //Split the line into tokens
-    QStringList tokens = line.split(' ',QString::KeepEmptyParts);
+    //QStringList tokens = line.split(' ',QString::KeepEmptyParts);
+    QRegExp rx("(\\s+)");
+    QStringList tokens = line.split(rx,QString::KeepEmptyParts);
     qDebug() << "Parser: Split line into tokens :: size " << qPrintable(QString::number(tokens.size()))<< " -> " << qPrintable(tokens.join(','));
 
     Instruction ins = Instruction();
@@ -40,7 +42,7 @@ Instruction Parser::parseLine(QString line){
         OptabManager *opm = &Singleton<OptabManager>::Instance();
 
         foreach(QString token,tokens){
-            qDebug() << "Parsing token " << qPrintable(token) << " counter is" << qPrintable(QString::number(counter));
+            //qDebug() << "Parsing token " << qPrintable(token) << " counter is" << qPrintable(QString::number(counter));
             if(token.length()==0)
                 continue;
 
@@ -54,30 +56,31 @@ Instruction Parser::parseLine(QString line){
 
             switch(counter){
                 case 0 : if(opm->isOpcode(token)){
-                    qDebug() << "Parser : Token is Opcode";
+                    qDebug() << "Parser : Token '"<< qPrintable(token)  << "' is Opcode.";
                     ins.setOperator(token);
                 }else {
-                    qDebug() << "Parser : Token is Label";
+                    qDebug() << "Parser : Token '"<< qPrintable(token)  << "' is Label";
                     ins.setLabel(token);
                 }
                 break;
             case 1 : if(ins.hasOperatorSet()){
-                    qDebug() << "Parser : Token is operand";
+                    qDebug() << "Parser : Token '"<< qPrintable(token)  << "' is operand";
                     ins.setOperand(token);
                 }else {
                     ins.setOperator(token);
-                    qDebug() << "Parser : Token is Operator";
+                    qDebug() << "Parser : Token '"<< qPrintable(token)  << "' is Operator";
                 }
                 break;
                 case 2 :  qDebug() << "Parser : Token is operand2"; ins.setOperand(token);break;
                 default :
-                    //error TODO
+                    //error
+                    ins.setError("Invalid No. of Operands!");
                     qCritical() << "Invalid No. of Operands!";
                 break;
             }
             counter++;
         }
     }
-    qDebug() <<"ParseLine Complete! Result:: Oper-> " << qPrintable(ins.getOperator()) << "Operand-> " << qPrintable(ins.getOperand()) << " Label->" <<qPrintable(ins.getLabel());
+    qDebug() <<"Parser: Complete! Result:: Operator-> " << qPrintable(ins.getOperator()) << "Operand-> " << qPrintable(ins.getOperand());
     return ins;
 }

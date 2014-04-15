@@ -1,29 +1,31 @@
 #include "utils.h"
 
-Utils::Utils()
-{
+Utils::Utils(){
 }
 
 int Utils::convertOperand(QString s){
     QChar ch = s.at(0);
     if(ch=='#'){
-        return readOperand(s.remove(0,1),10);
+        s = s.remove(0,1);
+        return readOperand(s);
     }
     if(ch =='C'){
         return s.length() -3;
     }
     if(ch.isDigit()){
-        return readOperand(s,10);
+        return readOperand(s);
     }
     if(s.startsWith("X'") && s.endsWith("'")){
-        s.remove(0,2).chop(1);
+        s = s.remove(0,2);
+        s.chop(1);
         return readOperand(s,16);
     }
     return 0;
 }
 
 int Utils::readOperand(QString s,int base){
-    return (int) strtol(s.toStdString().c_str(), NULL,base);
+    return s.toInt(0,base);
+    //return (int) strtol(s.toStdString().c_str(), NULL,base);
 }
 
 int Utils::getStBytes(QString s) {
@@ -31,7 +33,6 @@ int Utils::getStBytes(QString s) {
         return s.length() - 3;
     if (s.at(0).isDigit()) {
         s = QString::number(s.toInt(),16);
-        //s = Integer.toHexString(Integer.parseInt(s));
         int val = s.length();
         return val / 2 + (val % 2);
     }
@@ -66,8 +67,7 @@ int Utils::uintToHexStr(unsigned int num,char* buff){
 
 QString Utils::expand(int value,int size){
     QString ret = QString::number(value,16);
-    //TODO Verify
-    //QString ret = Integer.toHexString(value);
+    //qDebug() << "Expanded " << qPrintable(QString::number(value)) << " to " << qPrintable(ret);
     while(ret.length() < size) {
         ret = '0' + ret;
     }

@@ -1,7 +1,6 @@
 #include "instruction.h"
 
-Instruction::Instruction()
-{
+Instruction::Instruction(){
     this->line=0;
     this->loc=0;
     this->ObjectCode="";
@@ -15,6 +14,7 @@ Instruction::Instruction()
     extended = false;
     indirectAddressing = false;
     operandInLiteral = false;
+    error = "";
 }
 
 Instruction::Instruction(unsigned int line,unsigned int loc,QString ObjectCode,QString label,QString Operator,QString Operand,int base_status,int format){
@@ -107,6 +107,7 @@ void Instruction::setOperator(QString oper){
     this->isNull = false;
     if(oper.startsWith("+")){
         oper = oper.remove(0,1);
+        this->setExtended(true);
     }
     this->Operator = oper;
 }
@@ -145,6 +146,11 @@ bool Instruction::isExtended() {
 void Instruction::setExtended(bool ext) {
     extended = ext;
 }
+
+bool Instruction::isIndirectAddressing(){
+    return indirectAddressing;
+}
+
 
 Instruction Instruction::deserialize(QString readValue) {
         if(readValue == QString::null)
@@ -188,6 +194,10 @@ QString Instruction::serialize() {
     + " " + this->valid + " " + this->operandInLiteral;
 }
 
-bool Instruction::isIndirectAddressing(){
-    return indirectAddressing;
+void Instruction::setError(QString err){
+    error = err;
+}
+
+QString Instruction::getError(){
+    return error;
 }

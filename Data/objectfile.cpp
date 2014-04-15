@@ -30,10 +30,10 @@ void ObjectFile::writeHeader(int length, QString programName, int startAddress) 
 }
 
 void ObjectFile::writeEndOP(int startAddress) {
+    ModTabManager *mtMan = &Singleton<ModTabManager>::Instance();
     if(content.length() > 0) {
         flush();
     }
-    ModTabManager *mtMan = &Singleton<ModTabManager>::Instance();
     doWrite(mtMan->getAll());
     doWrite("E" + expand(startAddress, 6));
     newLine();
@@ -50,7 +50,6 @@ void ObjectFile::flush(int address) {
     start += expand(content.length()/2, 2);
     doWrite(start + content);
     newLine();
-    //content.setLength(0);
     content = "";
     start = "T" + expand(address, 6);
 }

@@ -1,8 +1,7 @@
 #include "symbol.h"
 #include "QString"
 
-Symbol::Symbol()
-{
+Symbol::Symbol(){
     label = "";
     address = -1;
     equ = false;

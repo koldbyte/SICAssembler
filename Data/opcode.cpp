@@ -7,8 +7,7 @@ Opcode::Opcode(){
     this->machinecode = -1;
 }
 
-Opcode::Opcode(QString m, int f, int mc)
-{
+Opcode::Opcode(QString m, int f, int mc){
     this->mnemonic  = m;
     this->format = f;
     this->machinecode = mc;
