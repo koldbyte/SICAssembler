@@ -9,6 +9,7 @@ public:
     ModTabManager();
     void addMod(QString mod);
     QString getAll();
+    void ResetState();
 };
 
 #endif // MODTABMANAGER_H

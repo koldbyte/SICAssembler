@@ -123,21 +123,17 @@ void MainWindow::on_actionConvert_Now_triggered()
     clearOutput();
     ui->ObjectCodeText->clear();
     Assembler *assembler = &Singleton<Assembler>::Instance();
-    assembler->Assemble(ui->SourceCodeTextEdit->toPlainText());
+    QString source = ui->SourceCodeTextEdit->toPlainText();
+    source.replace('\t',' ');
+    ui->SourceCodeTextEdit->setPlainText(source);
+    assembler->Assemble(source);
 
-    //QList<QString> code;
-    /*code = assembler->getCode();
-    QString cc = "";
-    foreach(QString x , code){
-        cc.append(x);
-        cc.append("\r\n");
-    }*/
-    //TESTING
     QString cc = assembler->getFinalCode();
-    //QString cc = assembler->prepareHeaderCode();
+    cc = cc.toUpper();
     ui->ObjectCodeText->clear();
     ui->ObjectCodeText->setPlainText("");
     ui->ObjectCodeText->setPlainText(cc);
+
     //update Symbols Table
     this->updateSymbolsTab();
 
@@ -166,7 +162,7 @@ void MainWindow::updateSymbolsTab(){
     int i=0;
     for(it=sym.begin()+7;it!=sym.end();it++){
         ui->symbols_table->setItem(i,0, new QTableWidgetItem(it->getLabel()));
-        ui->symbols_table->setItem(i,1, new QTableWidgetItem(QString::number(it->getAddress(),16)));
+        ui->symbols_table->setItem(i,1, new QTableWidgetItem(QString::number(it->getAddress(),16).toUpper()));
         i++;
     }
     ui->symbols_table->setRowCount(i);
@@ -190,8 +186,8 @@ void MainWindow::updateInsTab(){
                 ui->ins_table->setItem(i,0, new QTableWidgetItem(it->getLabel()));
                 ui->ins_table->setItem(i,1, new QTableWidgetItem(it->getOperator()));
                 ui->ins_table->setItem(i,2, new QTableWidgetItem(it->getOperand()));
-                ui->ins_table->setItem(i,3, new QTableWidgetItem(QString::number(it->getloc(),16)));
-                ui->ins_table->setItem(i,4, new QTableWidgetItem(it->getObjectCode()));
+                ui->ins_table->setItem(i,3, new QTableWidgetItem(QString::number(it->getloc(),16).toUpper()));
+                ui->ins_table->setItem(i,4, new QTableWidgetItem(it->getObjectCode().toUpper()));
                 i++;
             }
         }
@@ -244,12 +240,54 @@ void MainWindow::clearOutput(){
     //reset instance of manager classes..
     SymtabManager *symMan = &Singleton<SymtabManager>::Instance();
     Assembler *assembler = &Singleton<Assembler>::Instance();
+    ModTabManager *modMan = &Singleton<ModTabManager>::Instance();
 
     symMan->ResetState();
     assembler->ResetState();
+    modMan->ResetState();
+
 }
 
 
 void MainWindow::on_actionClear_Ouputs_triggered(){
     this->clearOutput();
+}
+
+void MainWindow::on_actionSave_Output_2_triggered(){
+    Assembler *assembler = &Singleton<Assembler>::Instance();
+    QList<Instruction> ins = assembler->getAllInstructions();
+    QList<Instruction> ::iterator it;
+    QString out = "";
+    out += "LOCCTR      LABEL       OPERATOR        OPERAND         OBJECTCODE\n";
+    //12 12 16 16 10
+    out += "--------------------------------------------------------------------\n";
+    int i=0;
+    for(it=ins.begin();it!=ins.end();it++){
+        //label operator operand loc object code
+        QString line = "";
+        if(it->getObjectCode()!=""){
+            line +=it->getLabel().leftJustified(12,' ');
+            line +=it->getOperator().leftJustified(12,' ');
+            line +=it->getOperand().leftJustified(16,' ');
+            line +=QString::number(it->getloc(),16).toUpper().leftJustified(16,' ');
+            line +=it->getObjectCode().toUpper().leftJustified(10,' ');
+            out += line + "\n";
+            i++;
+        }
+    }
+    QString fileName = QFileDialog::getSaveFileName(this,
+             tr("Save Output"), "",
+             tr("Source Code (*.obj);Text File(*.txt);;All Files (*)"));
+    if (fileName.isEmpty())
+             return;
+         else {
+             QFile file(fileName);
+             if (!file.open(QIODevice::WriteOnly)) {
+                 QMessageBox::information(this, tr("Unable to Save file"),
+                     file.errorString());
+                 return;
+             }
+             QTextStream stream(&file);
+             stream << out;
+        }
 }

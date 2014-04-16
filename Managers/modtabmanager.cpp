@@ -15,3 +15,7 @@ QString ModTabManager::getAll() {
     }
     return modifications;
 }
+
+void ModTabManager::ResetState(){
+    modTab.clear();
+}

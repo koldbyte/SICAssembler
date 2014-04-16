@@ -41,6 +41,8 @@ private slots:
 
     void on_actionClear_Ouputs_triggered();
 
+    void on_actionSave_Output_2_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
