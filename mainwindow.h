@@ -43,6 +43,8 @@ private slots:
 
     void on_actionSave_Output_2_triggered();
 
+    void on_actionAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
 };
