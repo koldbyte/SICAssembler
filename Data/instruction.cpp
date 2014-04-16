@@ -50,7 +50,7 @@ QString Instruction::getOperator(){
 }
 
 QString Instruction::getOperand(){
-    return this->Operand;
+    return this->Operand.trimmed();
 }
 
 int Instruction::getBase_status(){
@@ -200,4 +200,16 @@ void Instruction::setError(QString err){
 
 QString Instruction::getError(){
     return error;
+}
+
+void Instruction::setnextloc(unsigned int loc){
+    this->nextloc = loc;
+}
+
+unsigned int Instruction::getnextloc(){
+    return this->nextloc;
+}
+
+void Instruction::setIndirectAddressing(bool ind){
+        this->indirectAddressing = ind;
 }

@@ -10,6 +10,7 @@ class Instruction
 {
     unsigned int line;
     unsigned int loc;
+    unsigned int nextloc;
     QString ObjectCode;
     QString label;
     QString Operator;
@@ -28,6 +29,8 @@ public:
 
     unsigned int getLine();
     unsigned int getloc();
+    unsigned int getnextloc();
+
     QString getObjectCode();
     QString getLabel();
     QString getOperator();
@@ -41,6 +44,9 @@ public:
 
     void setLine(unsigned int line);
     void setloc(unsigned int loc);
+    void setnextloc(unsigned int loc);
+    void setIndirectAddressing(bool ind);
+
     void setObjectCode(QString objc);
     void setObjectCode(int objectCode);
     void setLabel(QString label);

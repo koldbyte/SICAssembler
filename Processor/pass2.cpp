@@ -96,7 +96,7 @@ int Pass2::objectFormat4(Instruction v, int command){
         operand = operand.left(operand.indexOf(","));
 
         address = symTab->getOperandValue(operand);
-        int pc = v.getloc();
+        int pc = v.getnextloc();
         address -= pc + 4;
 
         command += address;
@@ -126,27 +126,33 @@ int Pass2::objectFormat4(Instruction v, int command){
 int Pass2::objectFormat3(Instruction v, int command){
     SymtabManager *symTab = &Singleton<SymtabManager>::Instance();
     LittabManager *litman = &Singleton<LittabManager>::Instance();
-
     QString operand = v.getOperand();
+    if(operand.startsWith('@')){
+        v.setIndirectAddressing(true);
+        operand = operand.remove(0,1);
+    }
+    qDebug() << "XXX" <<  qPrintable(QString::number(command,2)) << " " << qPrintable(operand.isEmpty() ? "Empty": "NotEmpty");
     int address = 0;
-
-    if (operand != QString::null && operand.contains(",X")) {
+    qDebug() << "ObjectFormat3" << qPrintable(v.getOperator()) << qPrintable(v.getOperand())<<qPrintable("XX");
+    if ((operand != QString::null || operand!="") && operand.contains(",X")) {
+        //Indexed Mode addressing
         command |= BIT_X_3;
         command |= BIT_N_3;
         command |= BIT_I_3;
-
+        qDebug() << qPrintable("1");
         operand = operand.left(operand.indexOf(","));
         address = symTab->getOperandValue(operand);
-        int pc = v.getloc();
-        address = pc - address;
+        int pc = v.getnextloc();
+        //address = pc - address;
+        address = address - pc;
         // command += address;
         command = pcOrBase(operand, command, address);
-    } else if (operand !=QString::null && !operand.startsWith("#")) {
+    } else if ((!operand.isEmpty()) && !operand.startsWith("#")) {
         // First of all try PC-relative,
         // If the offset is outside boundaries, start with the base.
         int dn;
-        int pc = v.getloc();
-
+        int pc = v.getnextloc();
+        qDebug() << qPrintable("2");
         if(v.isOperandInLiteral()) {
             dn = litman->addressOfLiteral(operand);
         } else {
@@ -154,6 +160,7 @@ int Pass2::objectFormat3(Instruction v, int command){
         }
 
         int offset = dn - pc;
+        qDebug() << qPrintable(QString::number(trimInt(offset)))<< qPrintable(QString::number(pc,10))<<qPrintable(QString::number(dn));
         // Bits N and I can also be 0...
         command |= BIT_N_3;
         if (!v.isIndirectAddressing()) {
@@ -161,17 +168,23 @@ int Pass2::objectFormat3(Instruction v, int command){
         }
         // command += trimInt(offset);
         command = pcOrBase(operand, command, offset);
-    } else if (operand !=QString::null && operand.startsWith("#")) { // direct addressing
+        //if(offset < 0 ) command |=
+    } else if ((operand != QString::null || operand!="") && operand.startsWith("#")) { // direct addressing
         command |= BIT_I_3; // bit I is set to 1
         operand = operand.remove(0,1);
         address = symTab->getOperandValue(operand);
-
+qDebug() << qPrintable("3");
         if (symTab->hasLabel(operand) && !symTab->isEqu(operand)) {
-            int pc = v.getloc();
+            int pc = v.getnextloc();
             int offset = address - pc;
             command = pcOrBase(operand, command, offset);
         } else
             command += address;
+    }else {
+        qDebug() << qPrintable("4");
+        command |= BIT_N_3;
+        command |= BIT_I_3;
+
     }
     return command;
 }
@@ -183,7 +196,10 @@ int Pass2::pcOrBase( QString operand, int command,int offset){
     if (offset >= -2048 && offset <= 2047) {
         // PC-relative
         command |= BIT_P_3;
+
         command += trimInt(offset);
+        //command += offset;
+
     } else {
         if (!isBase) {
             // Error
@@ -207,8 +223,12 @@ int Pass2::trimInt(int i) {
         return i;
 
     QString s = QString::number( i, 2);
-    s = QString::fromStdString(s.toStdString().substr(s.length()-12));
-    return QString::number(s.toInt(),2).toInt();
+    qDebug() <<qPrintable("Trimint::") << qPrintable(s);
+    //s = QString::fromStdString(s.toStdString().substr(s.length()-11));
+    s = s.right(12);
+    qDebug() <<qPrintable("Trimint::") << qPrintable(s);
+    return s.toInt(0,2);
+    //return QString::number(s.toInt(),2);
 }
 
 QString Pass2::convertedOperand(QString s) {
