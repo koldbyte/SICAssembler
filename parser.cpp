@@ -15,7 +15,7 @@ Instruction Parser::parseLine(QString line){
     //qDebug() << "Starting Parser on line :: " << qPrintable(line);
 
     //no need to process empty lines
-    if(line.isEmpty()) return Instruction();
+    if(line.isEmpty() || line.isNull() || line.compare(" ")==0) return Instruction();
 
     //no need to process lines with comment only
     if((line.contains('.') && line.length()==1) || line.startsWith('.')){
@@ -71,7 +71,7 @@ Instruction Parser::parseLine(QString line){
                     qDebug() << "Parser : Token '"<< qPrintable(token)  << "' is Operator";
                 }
                 break;
-                case 2 :  qDebug() << "Parser : Token is operand2"; ins.setOperand(token);break;
+                case 2 :  qDebug() << "Parser : Token '"<< qPrintable(token)  << "' is operand2"; ins.setOperand(token);break;
                 default :
                     //error
                     ins.setError("Invalid No. of Operands!");

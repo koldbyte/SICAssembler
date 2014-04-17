@@ -204,7 +204,7 @@ void MainWindow::updateLiteralTab(){
         QMap<QString, Literal> lit = ltMan->getLittab();
         QMap<QString, Literal> ::iterator it;
         ui->lit_table->setRowCount(lit.size());
-        qDebug() << "Literal Table size is" << qPrintable(QString::number(lit.size()));
+        //qDebug() << "Literal Table size is" << qPrintable(QString::number(lit.size()));
         int i=0;
         for(it=lit.begin();it!=lit.end();it++){
             //string  value length location
@@ -295,7 +295,7 @@ void MainWindow::on_actionSave_Output_2_triggered(){
 void MainWindow::on_actionAbout_triggered(){
     QMessageBox msgBox;
     msgBox.setText("SIC/XE Assembler");
-    msgBox.setInformativeText("Developed By Bhaskar Divya\n Developed in QT");
+    msgBox.setInformativeText("Developed By Bhaskar Divya\nDeveloped in QT");
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.exec();
 

@@ -9,7 +9,7 @@ Instruction::Instruction(){
     this->Operand="";
     this->base_status=0;
     this->format=-1;
-    this->isNull = false;
+    this->isNull = true;
     this->valid = true;
     extended = false;
     indirectAddressing = false;

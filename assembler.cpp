@@ -19,11 +19,12 @@ void Assembler::Assemble(QString in){
 
         qDebug() << "Running Parser on #" << qPrintable(QString::number(lines)) << "line :" << qPrintable(line);
         ins = parser->parseLine(line);
-        qDebug() << "Parsed Line:: Found Instruction: Operator->" << qPrintable(ins.getOperator()) << " Operand->" << qPrintable(ins.getOperand());
+        if(!ins.Null()) qDebug() << "Parsed Line:: Found Instruction: Operator->" << qPrintable(ins.getOperator()) << " Operand->" << qPrintable(ins.getOperand());
+        else qDebug() << "Parsed Line:: Empty or Commented Line";
 
         if(ins.Null()){
-            ins = Instruction();
-            obj.push_back(ins);
+            //ins = Instruction();
+            //obj.push_back(ins);
             continue;
         }
         qDebug() << "Pass1: Running on instruction : Operator->" << qPrintable(ins.getOperator()) << " Operator->" << qPrintable(ins.getOperand());
@@ -54,12 +55,12 @@ void Assembler::Assemble(QString in){
                 objData->flush(it->getloc());
             }else if((*it).getObjectCode() != QString::null || (*it).getObjectCode() != ""){
                 objData->write(it->getObjectCode(), it->getloc());
-                //code.push_back(this->prepareCode((*it).getObjectCode(),(*it).getloc()));
             }
         }
     }
     objData->writeEndOP(p1->getInitialAddress());
     this->programObjectData = objData->getFinal();
+    qDebug() << "Processing of Source Code Complete!";
 }
 
 
@@ -76,6 +77,5 @@ void Assembler::ResetState(){
     programLength = 0;
     ProgramName = "";
     obj.clear();
-    code.clear();
     startAddress = 0;
 }

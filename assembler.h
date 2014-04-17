@@ -22,7 +22,6 @@
 class Assembler
 {
     QList<Instruction> obj;
-    QList<QString> code;
     int startAddress;
     QString ProgramName;
     int programLength;
