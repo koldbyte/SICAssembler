@@ -69,7 +69,7 @@ Instruction Pass1::doPass1(Instruction ins){
     oldLocSt = loc;
     //ins.setloc(loc);
     ins.setnextloc(loc);
-    //TODO OUtput log to console here
+    // OUtput log to console here
     qDebug() << "Pass 1: " << ins.getOperator() << " "  << utils->intToHexString(ins.getloc());
     return ins;
 }

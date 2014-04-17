@@ -10,7 +10,20 @@ int Utils::convertOperand(QString s){
         return readOperand(s);
     }
     if(ch =='C'){
-        return s.length() -3;
+        QString ret="";
+        s = s.remove(0,2);
+        s.chop(1);
+        //qDebug() << "BHASKARi" << qPrintable(s);
+        std::string ss = s.toStdString();
+        for(int i=0;i<s.size();i++){
+            int n = ss[i] ;
+            ret += QString::number(n,16);
+            //qDebug() << "BHASKARr" << qPrintable(ret) << qPrintable(s[i]);
+
+        }
+        //qDebug() << "BHASKARf" << qPrintable(ret);
+        return ret.toInt(0,16);
+       // return s.length() -3;
     }
     if(ch.isDigit()){
         return readOperand(s);
@@ -25,7 +38,6 @@ int Utils::convertOperand(QString s){
 
 int Utils::readOperand(QString s,int base){
     return s.toInt(0,base);
-    //return (int) strtol(s.toStdString().c_str(), NULL,base);
 }
 
 int Utils::getStBytes(QString s) {

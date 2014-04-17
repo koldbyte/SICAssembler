@@ -81,7 +81,7 @@ void Instruction::setObjectCode(int objectCode) {
     OptabManager *opMan = &Singleton<OptabManager>::Instance();
 
     int format = opMan->getOpcode(Operator).getFormat();
-
+    //qDebug() << qPrintable(utils->expand(objectCode, 8)) << qPrintable(utils->expand(objectCode, 6));
     switch( format ) {
         case 1:
             this->ObjectCode = utils->expand(objectCode, 2);
@@ -95,6 +95,9 @@ void Instruction::setObjectCode(int objectCode) {
             else
                 this->ObjectCode = utils->expand(objectCode, 8);
         break;
+    }
+    if(Operator.compare("BYTE")==0){
+        this->ObjectCode = utils->expand(objectCode, 6);
     }
 }
 
