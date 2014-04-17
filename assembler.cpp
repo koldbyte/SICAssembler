@@ -50,11 +50,11 @@ void Assembler::Assemble(QString in){
         if(!(*it).Null()){ //is valid
             *it = p2->doPass2(*it);
             qDebug() << "Pass2: Returned instruction: Operator" << qPrintable((*it).getOperator())<< " Operand->" << qPrintable((*it).getOperand()) << " ObjectCode->" << qPrintable((*it).getObjectCode());
-            if((*it).getObjectCode() != QString::null || (*it).getObjectCode() != ""){
+            if((*it).getOperator().compare("RESB")==0 || (*it).getOperator().compare("RESW")==0){
+                objData->flush(it->getloc());
+            }else if((*it).getObjectCode() != QString::null || (*it).getObjectCode() != ""){
                 objData->write(it->getObjectCode(), it->getloc());
                 //code.push_back(this->prepareCode((*it).getObjectCode(),(*it).getloc()));
-            }else if((*it).getOperator().compare("RESB")==0 || (*it).getOperator().compare("RESW")==0){
-                objData->flush(it->getloc());
             }
         }
     }

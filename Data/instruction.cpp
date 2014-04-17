@@ -97,7 +97,10 @@ void Instruction::setObjectCode(int objectCode) {
         break;
     }
     if(Operator.compare("BYTE")==0){
-        this->ObjectCode = utils->expand(objectCode, 6);
+        if(Operand.startsWith('C')){
+            this->ObjectCode = utils->expand(objectCode, 6);
+        }else
+            this->ObjectCode = utils->expand(objectCode,2);
     }
 }
 
