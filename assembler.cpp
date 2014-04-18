@@ -8,6 +8,7 @@ Assembler::Assembler(){
 
 void Assembler::Assemble(QString in){
     qDebug("Starting Assembler.");
+    time_t t1 = clock();
     Parser *parser = &Singleton<Parser>::Instance();
     Instruction ins;
     int lines = 0;
@@ -60,7 +61,9 @@ void Assembler::Assemble(QString in){
     }
     objData->writeEndOP(p1->getInitialAddress());
     this->programObjectData = objData->getFinal();
-    qDebug() << "Processing of Source Code Complete!";
+    time_t t2 = clock();
+    qDebug() << "Processing of Source Code Complete in " << qPrintable(QString::number((t2-t1)/ (double)CLOCKS_PER_SEC)) << "ms!";
+
 }
 
 

@@ -18,6 +18,7 @@
 #include "QDebug"
 #include "Processor/pass1.h"
 #include "Processor/pass2.h"
+#include "time.h"
 
 class Assembler
 {
